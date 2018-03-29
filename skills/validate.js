@@ -1,9 +1,14 @@
-var apimap = require('.apimap');
-
 module.exports = function(controller) {
 
+    var apimap = require('../.apimap');
     var getValidation = function(swaggerUrl) {
-        return swaggerUrl;
+        const { exec } = require('child_process');
+        return exec('wget ' + swaggerUrl, (err, stdout, stderr) => {
+            if (err) {
+                return 'Error validating swagger.';
+            }
+            return `${stdout}`;
+        });
     };
     var validate = function(bot, message) {
         if (message.match[1]) {
