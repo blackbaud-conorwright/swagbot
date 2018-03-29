@@ -28,7 +28,7 @@ module.exports = function(controller) {
     });
 
 
-    controller.hears(['^uptime','^debug'], 'direct_message,direct_mention', function(bot, message) {
+    controller.hears(['^uptime','^swagbot uptime'], 'message,direct_mention', function(bot, message) {
 
         bot.createConversation(message, function(err, convo) {
             if (!err) {
