@@ -27,9 +27,7 @@ module.exports = function(controller) {
         stats.convos++;
     });
 
-
-    controller.hears(['^uptime','^swagbot uptime'], 'message,direct_mention', function(bot, message) {
-
+    var uptime = function(bot, message) {
         bot.createConversation(message, function(err, convo) {
             if (!err) {
                 convo.setVar('uptime', formatUptime(process.uptime()));
@@ -40,10 +38,11 @@ module.exports = function(controller) {
                 convo.activate();
             }
         });
+    };
+    controller.hears(['^swagbot uptime'], 'ambient', uptime);
+    controller.hears(['^uptime'], 'direct_mention,direct_message', uptime);
 
-    });
-
-    controller.hears(['^say (.*)','^say'], 'direct_message,direct_mention', function(bot, message) {
+    var say = function(bot, message) {
         if (message.match[1]) {
 
             if (!wordfilter.blacklisted(message.match[1])) {
@@ -54,8 +53,9 @@ module.exports = function(controller) {
         } else {
             bot.reply(message, 'I will repeat whatever you say.')
         }
-    });
-
+    }
+    controller.hears(['^swagbot say (.*)','^swagbot say'], 'ambient', say);
+    controller.hears(['^say (.*)','^say'], 'direct_message,direct_mention', say);
 
     /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
     /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
